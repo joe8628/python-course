@@ -50,7 +50,7 @@ Skills compound: later parts assume the idioms of earlier ones.
 | Part | File | Covers |
 |------|------|--------|
 | 0 | [part-0.md](part-0.md) | Modern Python Project Structure (0.1–0.5) |
-| I | [part-1.md](part-1.md) | Chapters 1–4 — Core Language Foundations |
+| I | [part-1.md](part-1.md) | Chapters 1–4 — Reactivating the Fundamentals |
 | II | [part-2.md](part-2.md) | Chapters 5–8 — Writing Pythonic Code |
 | III | [part-3.md](part-3.md) | Chapters 9–12 — Object-Oriented & Typed Python |
 | IV | [part-4.md](part-4.md) | Chapters 13–16 — Structuring Real Projects |

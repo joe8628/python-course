@@ -117,5 +117,7 @@ ever shipped, because every assert was proven achievable before release.
 
 > Unresolved spec-level questions. Resolving one usually produces a `wiki/DEC-XXXX.md` entry.
 
-- [ ] part-1.md is specified as a verbatim drop-in exemplar (never edited) but
-  has not been dropped in yet — source/content of that exemplar is pending.
+- [x] ~~part-1.md exemplar source~~ — resolved 2026-07-01: provided by the user
+  and dropped in verbatim; verified (12/12 asserts green) and linted. The lint
+  gate was calibrated to it (DEC-0007). part-1.md is now frozen (never edit).
+- [ ] none open.

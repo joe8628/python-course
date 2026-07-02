@@ -1,17 +1,21 @@
 #!/usr/bin/env python3
 """Mechanical style gate for workbook part files.
 
-Checks (per SPEC.md and the Workbook Style Rules in the repo-root CLAUDE.md):
-- Every "**Exercise" block's first fenced code block contains `...`.
-- Every function-building exercise block contains >= 1 `assert`.
-  (Refactor exercises — no def/class scaffold + a "rewrite" instruction
-  comment — are exempt from the assert check only.)
+Checks (per SPEC.md and the Workbook Style Rules in the repo-root CLAUDE.md;
+calibrated against the part-1.md exemplar, which is ground truth):
+- Every function-building exercise's first fenced code block contains `...`
+  and the exercise contains >= 1 `assert`. Assert-exempt exercises
+  (refactor/predict: no def/class scaffold + a rewrite/refactor/predict/
+  convert instruction in the exercise line or a comment) are exempt from
+  both the `...` and the assert check.
 - No exercise def body has > 2 statements besides docstring / `...`
   (solution-leak guard).
 - Every concept code fence (not under an Exercise block) has >= 1 comment.
 - Heading chapter numbering is monotonic and inside the range SPEC.md's
   FILE -> CHAPTER MAP assigns to the filename.
-- Every fenced non-bash block parses under ast.parse.
+- Every fenced non-bash block parses under ast.parse, EXCEPT exercise
+  blocks containing `...` — a scaffold placeholder may legally occupy a
+  position the grammar requires filled (e.g. the body of `match`).
 - No headings or code comments matching /solution|answer key/i.
 
 Usage: python tools/lint_workbook.py part-N.md [part-M.md ...]
@@ -45,7 +49,7 @@ HEADING_RE = re.compile(r"^(#{1,6})\s+(.*)$")
 # Chapter number opening a heading: "## 5 Functions..." / "## Chapter 5 ..." / "### 5.2 ...".
 HEADING_NUM_RE = re.compile(r"^(?:Chapter\s+)?(\d+)(?:\.(\d+))?\b")
 LEAK_RE = re.compile(r"solution|answer\s*key", re.IGNORECASE)
-REWRITE_RE = re.compile(r"rewrite", re.IGNORECASE)
+EXEMPT_RE = re.compile(r"rewrite|refactor|predict|convert", re.IGNORECASE)
 
 
 @dataclass
@@ -53,7 +57,12 @@ class CodeBlock:
     lang: str
     start_line: int  # 1-based line of the opening fence
     lines: list[str] = field(default_factory=list)
-    in_exercise: bool = False
+    exercise_id: int | None = None  # which **Exercise marker this block belongs to
+    exercise_text: str = ""  # the marker line's prose (instruction)
+
+    @property
+    def in_exercise(self) -> bool:
+        return self.exercise_id is not None
 
     @property
     def text(self) -> str:
@@ -69,13 +78,15 @@ class Issue:
 def parse_blocks(lines: list[str]) -> tuple[list[CodeBlock], list[tuple[int, str]]]:
     """Split a part file into fenced code blocks and (line, text) headings.
 
-    A block belongs to an exercise if the nearest preceding structural marker
-    (heading or "**Exercise" line) was an exercise marker.
+    A block belongs to the exercise whose "**Exercise" marker most recently
+    preceded it; any non-exercise heading ends the exercise's scope.
     """
     blocks: list[CodeBlock] = []
     headings: list[tuple[int, str]] = []
     current: CodeBlock | None = None
-    in_exercise = False
+    exercise_id: int | None = None
+    exercise_text = ""
+    next_id = 0
 
     for lineno, line in enumerate(lines, start=1):
         fence = FENCE_RE.match(line)
@@ -88,16 +99,18 @@ def parse_blocks(lines: list[str]) -> tuple[list[CodeBlock], list[tuple[int, str
             continue
         if fence:
             current = CodeBlock(lang=fence.group(1).lower(), start_line=lineno,
-                                in_exercise=in_exercise)
+                                exercise_id=exercise_id, exercise_text=exercise_text)
             continue
         heading = HEADING_RE.match(line)
+        if heading and not EXERCISE_RE.search(heading.group(2)):
+            headings.append((lineno, heading.group(2).strip()))
+            exercise_id, exercise_text = None, ""
+            continue
         if heading:
             headings.append((lineno, heading.group(2).strip()))
-            # A heading ends any exercise block unless it is itself an exercise.
-            in_exercise = bool(EXERCISE_RE.search(heading.group(2)))
-            continue
         if EXERCISE_RE.search(line):
-            in_exercise = True
+            exercise_id, exercise_text = next_id, line
+            next_id += 1
 
     if current is not None:
         blocks.append(current)  # unterminated fence; the parse check will flag it
@@ -105,33 +118,23 @@ def parse_blocks(lines: list[str]) -> tuple[list[CodeBlock], list[tuple[int, str
 
 
 def group_exercise_blocks(blocks: list[CodeBlock]) -> list[list[CodeBlock]]:
-    """Group consecutive in-exercise code blocks; each group is one exercise."""
-    groups: list[list[CodeBlock]] = []
-    current: list[CodeBlock] = []
-    prev_in_exercise = False
+    """Group code blocks by their **Exercise marker; each group is one exercise."""
+    groups: dict[int, list[CodeBlock]] = {}
     for block in blocks:
-        if block.in_exercise:
-            if not prev_in_exercise and current:
-                groups.append(current)
-                current = []
-            current.append(block)
-        elif current:
-            groups.append(current)
-            current = []
-        prev_in_exercise = block.in_exercise
-    if current:
-        groups.append(current)
-    return groups
+        if block.exercise_id is not None:
+            groups.setdefault(block.exercise_id, []).append(block)
+    return [groups[eid] for eid in sorted(groups)]
 
 
-def is_refactor_exercise(group: list[CodeBlock]) -> bool:
-    """Refactor exercises: no def/class scaffold, plus a 'rewrite' instruction comment."""
+def is_exempt_exercise(group: list[CodeBlock]) -> bool:
+    """Assert-exempt exercises (refactor/predict): no def/class scaffold, plus a
+    rewrite/refactor/predict/convert instruction in the exercise line or a comment."""
     text = "\n".join(b.text for b in group)
     has_scaffold = re.search(r"^\s*(def|class)\s", text, re.MULTILINE) is not None
-    has_rewrite_comment = any(
-        REWRITE_RE.search(line) for line in text.splitlines() if "#" in line
+    has_instruction = bool(EXEMPT_RE.search(group[0].exercise_text)) or any(
+        EXEMPT_RE.search(line) for line in text.splitlines() if "#" in line
     )
-    return not has_scaffold and has_rewrite_comment
+    return not has_scaffold and has_instruction
 
 
 def def_body_statements(node: ast.FunctionDef | ast.AsyncFunctionDef) -> int:
@@ -163,8 +166,12 @@ def check_file(path: Path) -> list[Issue]:
                                     "solution-leak marker in code comment"))
 
     # --- every non-bash fence must parse --------------------------------------
+    # Exception: exercise blocks containing `...` — the placeholder may occupy
+    # a position the grammar requires filled (e.g. the body of `match`).
     for block in blocks:
         if block.lang in ("bash", "sh", "shell", "console", "text", "toml"):
+            continue
+        if block.in_exercise and "..." in block.text:
             continue
         try:
             ast.parse(block.text)
@@ -184,14 +191,14 @@ def check_file(path: Path) -> list[Issue]:
     # --- exercise block rules ---------------------------------------------------
     for group in group_exercise_blocks(parsable):
         first = group[0]
-        if "..." not in first.text:
-            issues.append(Issue(first.start_line,
-                                "exercise's first code block has no `...` placeholder"))
-        refactor = is_refactor_exercise(group)
-        combined = "\n".join(b.text for b in group)
-        if not refactor and not re.search(r"^\s*assert\b", combined, re.MULTILINE):
-            issues.append(Issue(first.start_line,
-                                "function-building exercise has no assert"))
+        if not is_exempt_exercise(group):
+            if "..." not in first.text:
+                issues.append(Issue(first.start_line,
+                                    "exercise's first code block has no `...` placeholder"))
+            combined = "\n".join(b.text for b in group)
+            if not re.search(r"^\s*assert\b", combined, re.MULTILINE):
+                issues.append(Issue(first.start_line,
+                                    "function-building exercise has no assert"))
         for block in group:
             try:
                 tree = ast.parse(block.text)

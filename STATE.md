@@ -14,10 +14,10 @@
 > The ONE thing in flight right now. One or two sentences. This is the line the
 > compaction directives are told to preserve verbatim.
 
-Anti-drift system is populated and live (ANCHOR/SPEC/ARCHITECTURE/GLOSSARY/wiki
-filled; repo git-initialized). Next: obtain and drop in part-1.md verbatim (the
-never-edited style exemplar — see SPEC.md Open Questions), then author parts in
-PROGRESS.md order through the verification gate.
+part-1.md exemplar is in — verbatim, verified (12/12 asserts green), linted;
+the lint gate is calibrated to it (DEC-0007). Next: author part-0, then parts
+2–7 in PROGRESS.md order, each rereading part-1.md IN FULL first and passing
+the verification gate (RUL-0002).
 
 ## Done (recent, relevant)
 
@@ -36,33 +36,33 @@ PROGRESS.md order through the verification gate.
 
 ## In Progress
 
-- [ ] none — all workbook parts still `pending` in PROGRESS.md by design.
+- [ ] none — part-1 is `linted`; all other parts `pending`.
 
 ## Next
 
-- [ ] Drop in part-1.md verbatim (canonical exemplar; never edit after) —
-      blocked on its source, see Open Questions.
-- [ ] Write part-0, then parts 2–7 in PROGRESS.md order, each through the
-      verification gate (RUL-0002).
+- [ ] Author part-0, then parts 2–7 in PROGRESS.md order, each rereading
+      part-1.md IN FULL first and passing the verification gate (RUL-0002).
 
 ## Open Questions
 
-- [ ] Where does the verbatim part-1.md exemplar come from? (Tracked in root
-      SPEC.md Open Questions; resolving it should produce a DEC entry.)
+- [ ] none
 
 ## Blockers
 
-- part-1.md source not yet provided — blocks part authoring start (part-0
-  could proceed first if decided; that decision is open).
+- none
 
 ## Files touched this session
 
-- `ANCHOR.md`, `SPEC.md`, `ARCHITECTURE.md`, `GLOSSARY.md` — populated from
-  templates (SPEC drafted from `python-crash-course/SPEC.md`)
-- `wiki/CON-0001..2, RUL-0001..3, DEC-0001..6` — real records replace the
-  pipeline examples; `wiki/INDEX.md` regenerated
-- `STATE.md` — this handoff
-- repo git-initialized; scaffold committed
+- `python-crash-course/part-1.md` — verbatim exemplar dropped in (now frozen)
+- `python-crash-course/tools/lint_workbook.py` — calibrated to the exemplar
+  (DEC-0007): refactor/predict exercises exempt from `...`/assert checks;
+  `...` exercise blocks tolerate SyntaxError
+- `python-crash-course/PROGRESS.md` — part-1 -> linted, linter change noted
+- `python-crash-course/README.md` — part-1 title matched to the exemplar
+- `wiki/DEC-0007.md` + `wiki/INDEX.md` — decision recorded, index rebuilt
+- root `SPEC.md` — part-1 open question resolved; `STATE.md` — this handoff
+- previous sessions: anti-drift docs populated, wiki seeded, repo
+  git-initialized and scaffold committed (`ea8cdc1`)
 
 ## Run / test commands
 
