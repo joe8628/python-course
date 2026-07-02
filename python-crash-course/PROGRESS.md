@@ -14,7 +14,13 @@ part-0: linted    # 2026-07-02; verify green (2/2: exercises 0.2/0.5 under pytes
                   # tests/; 0.3 checks `which python3` after deactivate (this distro ships
                   # no bare `python`); 0.4 hook entries cd in from the git root, where
                   # pre-commit actually runs (one level above this dir). Linter unchanged.
-part-2: pending
+part-2: linted    # 2026-07-02; verify green first run (17/17 under pytest: 14 function-
+                  # building references + 5.3/5.4b/6.4 refactor-predict equivalence checks);
+                  # all 35 asserts copied byte-exact into the verify file; lint clean with
+                  # no linter change (predict exercises def-free by design, DEC-0007 exemption
+                  # applied as calibrated). Spot-check (random: 5.1, 5.4a, 6.3): each solvable
+                  # from scaffold+hint+asserts using only idioms from parts 1–2. No assert
+                  # or hint edits were needed.
 part-3: pending
 part-4: pending
 part-5: pending
