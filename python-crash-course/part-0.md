@@ -12,6 +12,8 @@ python-crash-course/           # the directory you are sitting in
 ├── src/
 │   └── crash_course/          # the importable package — the directory name IS the import name
 │       └── __init__.py        # marks a regular package; carries __version__
+├── tests/
+│   └── test_smoke.py          # outside the package; a suite that collects nothing makes bare `pytest` exit 5, not 0
 ├── tools/
 │   └── lint_workbook.py       # repo-local dev script, deliberately NOT inside the package
 ├── SPEC.md · PROGRESS.md · part-0.md … part-7.md   # workbook content, not code
@@ -97,7 +99,7 @@ Applications commit a lockfile because a deploy must be byte-for-byte reproducib
 ```bash
 which python                # pass: a path under .venv/bin
 python -m pip list          # pass: crash-course 0.1.0, ruff, mypy, pytest — and almost nothing else
-deactivate; which python    # pass: the system interpreter again — the env was the ONLY change
+deactivate; which python3   # pass: the system path again (e.g. /usr/bin/python3) — the env was the ONLY change
 source .venv/bin/activate   # back in before you continue
 ```
 
@@ -127,23 +129,26 @@ pythonpath = ["src"]                 # tests can import the package even without
 `pre-commit` runs the gates on `git commit` and blocks the commit on any failure — the point is that red never even reaches CI. This file is **not** shipped in this repo; you write it in Exercise 0.4b:
 
 ```text
-# .pre-commit-config.yaml
+# .pre-commit-config.yaml — saved at the GIT ROOT: pre-commit runs every hook
+# from there, NOT from the directory you commit in. This workbook sits one
+# level below its repo's root, so each entry cds in first; drop the cd if
+# your project IS the git root.
 repos:
   - repo: local              # local + system = run the activated venv's own tools (no version skew)
     hooks:
       - id: ruff
         name: ruff
-        entry: ruff check .
+        entry: sh -c 'cd python-crash-course && ruff check .'
         language: system
         pass_filenames: false   # run repo-wide, not only on staged files
       - id: mypy
         name: mypy
-        entry: mypy src
+        entry: sh -c 'cd python-crash-course && mypy src'
         language: system
         pass_filenames: false
       - id: pytest
         name: pytest
-        entry: pytest
+        entry: sh -c 'cd python-crash-course && pytest'
         language: system
         pass_filenames: false
 ```
@@ -156,7 +161,7 @@ repos:
 ruff check . && mypy src && pytest   # after reverting: exits 0 again (echo $?)
 ```
 
-**Exercise 0.4b** — Wire the hooks: `pip install pre-commit`, save the config above as `.pre-commit-config.yaml`, run `pre-commit install` (in a real project, pre-commit itself would join the dev extra).
+**Exercise 0.4b** — Wire the hooks: `pip install pre-commit`, save the config above as `.pre-commit-config.yaml` at the git root, run `pre-commit install` (in a real project, pre-commit itself would join the dev extra).
 ```bash
 pre-commit run --all-files   # pass: every hook reports Passed, exit 0
 ```
