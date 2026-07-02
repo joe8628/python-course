@@ -21,7 +21,14 @@ part-2: linted    # 2026-07-02; verify green first run (17/17 under pytest: 14 f
                   # applied as calibrated). Spot-check (random: 5.1, 5.4a, 6.3): each solvable
                   # from scaffold+hint+asserts using only idioms from parts 1–2. No assert
                   # or hint edits were needed.
-part-3: pending
+part-3: linted    # 2026-07-02; verify green (16/16 under pytest; all 40 asserts copied
+                  # byte-exact); 12.4's second leg verified for real: solved scratch_12.py
+                  # passes `mypy --strict scratch_12.py` and `python scratch_12.py`. Lint
+                  # clean first run, no linter change. One harness-only fix during verify
+                  # (11.1's Ticket moved to module scope — nested dataclasses repr with
+                  # __qualname__; the shipped assert is correct for a scratch file). Spot-
+                  # check (random: 10.3, 11.3, 11.4): each solvable from scaffold+hint+
+                  # asserts with idioms from parts 1–3. No assert or hint edits needed.
 part-4: pending
 part-5: pending
 part-6: pending
