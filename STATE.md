@@ -14,36 +14,32 @@
 > The ONE thing in flight right now. One or two sentences. This is the line the
 > compaction directives are told to preserve verbatim.
 
-Parts 0–5 are authored, verified, and linted (chapters 0–20). Next: author
-part-6 (ch 21–24, honoring the ch21 stdlib-only and ch22 FastAPI/TestClient
-pre-decided choices), then part-7 — each rereading part-1.md IN FULL first and
-passing the verification gate (RUL-0002) in a separate session.
+ALL parts (0–7, chapters 0–28) are authored, verified, and linted, and the
+final integrity sweep is DONE — the workbook meets SPEC's Definition of Done.
+Only remaining action: commit the uncommitted work (part-7, PROGRESS, sweep fixes).
 
 ## Done (recent, relevant)
 
-- [x] Parts 0–5 through the full gate (author session + verify session each):
-      reference solutions green under pytest, asserts copied byte-exact, lint
-      clean, bash drills executed for real. No linter changes were needed after
-      DEC-0007 — predict exercises are designed def-free to fit its exemption.
-- [x] Repo fix from part-0 verification: `tests/test_smoke.py` added — an empty
-      suite made bare `pytest` exit 5 (DEC-0008); part-0's 0.1 tree updated.
-- [x] Part-0 content fixes found by verification: 0.3 checks `which python3`
-      after deactivate (distro ships no bare `python`); 0.4 pre-commit entries
-      cd in from the git root, where pre-commit actually runs.
-- [x] Root `.gitignore` gained `.venv/` (user-created repo-root venv is the
-      working env; install: `../.venv/bin/python -m pip install -e ".[dev]"`
-      from python-crash-course/). pre-commit is installed in that venv.
+- [x] Final integrity sweep (2026-07-06): lint clean on all 8 parts; part-1.md
+      byte-identical to the e3172db exemplar (git-verified); zero solution
+      leaks; numbering 0.1–0.5 + ch 1–28 gap/dupe-free and matches SPEC's map;
+      all 98 cross-references valid and backward-only (5 prose previews aside);
+      README links all 8 parts; ruff/mypy/tomllib/pytest all green.
+- [x] Doc fix from the sweep: SPEC.md + ANCHOR.md said "9 part files" —
+      corrected to 8 (part-0…part-7), matching the authoritative FILE → CHAPTER
+      MAP. No pedagogy changed; no part file edited.
+- [x] Parts 6 and 7 authored + verified in prior sessions (see PROGRESS.md
+      entries dated 2026-07-06); parts 0–5 committed through `dfc3159`.
 
 ## In Progress
 
-- [ ] none — parts 0–5 `linted`; parts 6–7 and final-sweep `pending`.
+- [ ] none — every PROGRESS.md line is `linted`; final-sweep is `done`.
 
 ## Next
 
-- [ ] Author part-6.md (ch 21–24): ch21 stdlib-only (json/csv/sqlite3), ch22
-      FastAPI + in-process TestClient, ch23 patterns/SOLID, ch24 security.
-- [ ] Verify part-6 (separate session), then author + verify part-7 (ch 25–28,
-      capstone), then final-sweep per SPEC's Definition of Done.
+- [ ] Commit: `python-crash-course/part-7.md` (new content), `PROGRESS.md`
+      (part-7 + final-sweep entries), `SPEC.md` + `ANCHOR.md` (9→8 fix),
+      `STATE.md`. Then the project is complete per SPEC's Definition of Done.
 
 ## Open Questions
 
@@ -55,20 +51,17 @@ passing the verification gate (RUL-0002) in a separate session.
 
 ## Files touched this session
 
-- `python-crash-course/part-5.md` — authored (ch 17–20) and verified green
-  (18/18; ch 17 mirrored at module level so given tests ran for real)
-- `python-crash-course/PROGRESS.md` — part-5 -> linted
-- `wiki/DEC-0008.md` + `wiki/INDEX.md` — smoke-test decision recorded, index rebuilt
+- `python-crash-course/SPEC.md` — Definition of Done: "9 part files" → 8
+- `ANCHOR.md` — North Star: "9 part files" → 8
+- `python-crash-course/PROGRESS.md` — final-sweep: pending → done (with audit log)
 - `STATE.md` — this handoff
-- prior sessions this cycle: parts 0–4 authored/verified/committed
-  (`e3172db`…`281aba4`), tests/test_smoke.py, root .gitignore
 
 ## Run / test commands
 
 ```bash
 python3 wiki/build_index.py && python3 wiki/build_index.py --test
 bash .claude/hooks/session-start.sh
-cd python-crash-course && ../.venv/bin/ruff check . && ../.venv/bin/mypy src && ../.venv/bin/pytest
-python3 tools/lint_workbook.py part-N.md    # from python-crash-course/
-../.venv/bin/pytest /tmp/verify_part-N.py -q   # verification gate, then delete the file
+cd python-crash-course && python3 tools/lint_workbook.py part-0.md part-1.md part-2.md part-3.md part-4.md part-5.md part-6.md part-7.md
+cd python-crash-course && .venv/bin/pytest -q          # local venv: pytest+fastapi+httpx (no ruff/mypy)
+cd python-crash-course && uvx ruff check . && uvx mypy src   # root .venv is gone; uvx works
 ```

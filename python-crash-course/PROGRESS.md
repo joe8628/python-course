@@ -57,6 +57,26 @@ part-6: linted    # 2026-07-06; verify green first run (19/19 under pytest; all 
                   # 24.3b): each solvable from scaffold+hint+asserts with idioms from parts
                   # 1-6 (22.4's concept shows Depends + overrides; 24.5/24.3b hints name
                   # literal_eval / hmac.compare_digest). No assert or hint edits needed.
-part-7: pending
-final-sweep: pending
+part-7: linted    # 2026-07-06; verify green first run (12/12 under pytest; all 26 asserts
+                  # copied byte-exact, automated parity check). 27.1's predictions pinned by
+                  # running the shown statements (alias mutates, + copies, dict() copies);
+                  # 27.2b's claimed bug reproduced for real ([2,2,2] from the late-binding
+                  # lambda). 25.4/27.3 are prose critiques (assert-exempt per DEC-0007,
+                  # criteria in docstrings) and ch 28 is command-gated — nothing mechanical
+                  # to run. Lint clean first run, no linter change. Spot-check (random: 26.4,
+                  # 26.1, 26.2b): each solvable from scaffold+hint+asserts with idioms from
+                  # parts 1-7 (@cache from 20.4, Counter from ch 3, window from 26.2's
+                  # concept). No assert or hint edits needed.
+final-sweep: done   # 2026-07-06; all 8 parts lint clean; part-1.md byte-identical to the
+                  # e3172db exemplar (git-verified). Zero solution leaks: no solution/answer
+                  # headings; every exercise def scaffold carries `...` (the one automated
+                  # flag, 27.3's `def load`, is code-under-review, assert-exempt by design).
+                  # Numbering: 0.1–0.5 then chapters 1–28, no gaps/dupes, matches SPEC map;
+                  # concepts sequential per chapter; every Exercise N.x has a concept N.x.
+                  # Cross-refs: all 98 Part/chapter references point at real sections; the 5
+                  # forward refs are prose previews, no exercise relies on later idioms.
+                  # README links all 8 parts in order and states the assert-driven method.
+                  # ruff check . / mypy src / tomllib-load of pyproject: all pass. Doc fix:
+                  # SPEC.md + ANCHOR.md said "9 part files" — corrected to 8 (part-0…part-7),
+                  # matching the authoritative FILE → CHAPTER MAP.
 Legend: pending -> written -> verified (asserts green) -> linted

@@ -8,7 +8,7 @@
 ## North Star
 
 **Purpose (one sentence):**
-An assert-driven Python proficiency workbook (`python-crash-course/`, 9 part
+An assert-driven Python proficiency workbook (`python-crash-course/`, 8 part
 files, chapters 0–28) that re-skills an experienced-but-rusty engineer for a
 professional Python developer role — every exercise verified mechanically
 before it ships.

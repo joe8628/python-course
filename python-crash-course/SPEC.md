@@ -70,7 +70,7 @@ If an assert is unachievable/ambiguous, fix the assert in the part file —
 never compensate by leaking the answer in a hint.
 
 ## DEFINITION OF DONE (whole repo)
-- 9 part files + README + pyproject.toml, internally consistent.
+- 8 part files (part-0 … part-7) + README + pyproject.toml, internally consistent.
 - Zero worked solutions anywhere in shipped files.
 - All snippets valid modern Python 3.11+; pyproject.toml valid.
 - PROGRESS.md shows every part verified+linted.
