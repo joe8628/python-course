@@ -36,7 +36,17 @@ part-4: linted    # 2026-07-02; verify green first run (13/13 under pytest; all 
                   # proof included). Lint clean first run, no linter change. Spot-check
                   # (random: 13.1, 13.4, 16.1): each solvable from scaffold+hint+asserts
                   # with idioms from parts 1–4. No assert or hint edits needed.
-part-5: pending
+part-5: linted    # 2026-07-06; verify green first run (18/18 under pytest — ch 17 mirrored
+                  # at module level so its given tests run for real, incl. fixtures,
+                  # parametrize, and monkeypatch). All exercise asserts copied byte-exact
+                  # (4 parity leftovers are concept-snippet asserts, not exercises). 18.1
+                  # formatter drill executed for real: check fails, format fixes, idempotent.
+                  # 19.4 gather-interleaving and 20.2/20.4 op-count asserts all hold as
+                  # designed (10000 vs 200 ops; fib calls == 21). Lint clean first run, no
+                  # linter change. Spot-check (random: 17.2, 19.3, 20.2): each solvable from
+                  # scaffold+hint+asserts with idioms from parts 1–5; 20.2's counting rule is
+                  # stated in the scaffold comments, removing ambiguity. No assert or hint
+                  # edits needed.
 part-6: pending
 part-7: pending
 final-sweep: pending
