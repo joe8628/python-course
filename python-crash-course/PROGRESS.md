@@ -47,7 +47,16 @@ part-5: linted    # 2026-07-06; verify green first run (18/18 under pytest — c
                   # scaffold+hint+asserts with idioms from parts 1–5; 20.2's counting rule is
                   # stated in the scaffold comments, removing ambiguity. No assert or hint
                   # edits needed.
-part-6: pending
+part-6: linted    # 2026-07-06; verify green first run (19/19 under pytest; all 41 asserts
+                  # copied byte-exact, confirmed by an automated parity check). Venv recreated
+                  # on this machine (was gitignored): pytest + fastapi 0.139 + httpx 0.28 —
+                  # ch 22 ran through TestClient in-process incl. the 422 and 404 legs and the
+                  # dependency_overrides flip. 24.x fixed-code asserts all hold (injection
+                  # payload inert + table survives; traversal raises; pbkdf2 verify/fresh-salt).
+                  # Lint clean first run, no linter change. Spot-check (random: 22.4, 24.5,
+                  # 24.3b): each solvable from scaffold+hint+asserts with idioms from parts
+                  # 1-6 (22.4's concept shows Depends + overrides; 24.5/24.3b hints name
+                  # literal_eval / hmac.compare_digest). No assert or hint edits needed.
 part-7: pending
 final-sweep: pending
 Legend: pending -> written -> verified (asserts green) -> linted
