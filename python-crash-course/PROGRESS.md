@@ -29,7 +29,13 @@ part-3: linted    # 2026-07-02; verify green (16/16 under pytest; all 40 asserts
                   # __qualname__; the shipped assert is correct for a scratch file). Spot-
                   # check (random: 10.3, 11.3, 11.4): each solvable from scaffold+hint+
                   # asserts with idioms from parts 1–3. No assert or hint edits needed.
-part-4: pending
+part-4: linted    # 2026-07-02; verify green first run (13/13 under pytest; all 33 asserts
+                  # copied byte-exact). Bash drills executed for real: 14.2 prints 3 via an
+                  # __init__ re-export; 14.3 reproduces the CWD shadow (src/ path, then
+                  # /tmp/flat path). Ch 16 record-capture asserts all hold (deferred-args
+                  # proof included). Lint clean first run, no linter change. Spot-check
+                  # (random: 13.1, 13.4, 16.1): each solvable from scaffold+hint+asserts
+                  # with idioms from parts 1–4. No assert or hint edits needed.
 part-5: pending
 part-6: pending
 part-7: pending
