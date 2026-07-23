@@ -60,3 +60,4 @@ Skills compound: later parts assume the idioms of earlier ones.
 
 The authoritative chapter map and content spec live in [SPEC.md](SPEC.md).
 Build state lives in [PROGRESS.md](PROGRESS.md).
+A step-by-step guide to working the course lives in [HOW-TO-USE.md](HOW-TO-USE.md).
