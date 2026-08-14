@@ -5,7 +5,7 @@
 > over comprehensive — stale state is worse than none.
 
 **Last updated:** 2026-08-14
-**Active branch / worktree:** main (+ new orphan branch `release`, local only)
+**Active branch / worktree:** main (+ orphan branch `release`, local only)
 
 ---
 
@@ -14,10 +14,11 @@
 > The ONE thing in flight right now. One or two sentences. This is the line the
 > compaction directives are told to preserve verbatim.
 
-Content is built and now awaits **hands-on review by Joe** — that review is what
-declares the **v1.0 baseline** (VERSIONS.md, DEC-0010). Nothing is pushed:
-`main` is ahead by several commits and `release` exists only locally. After
-v1.0, work moves to one-PR-per-issue; no more direct authoring on `main`.
+Content is built and awaits **hands-on review by Joe** — that review declares the
+**v1.0 baseline** (VERSIONS.md). Nothing is pushed: `main` is 7 commits ahead of
+origin and `release` exists only locally. After v1.0, all work runs the
+production flow in DEC-0010 (GitHub Issue → draft PR → merge), and direct
+authoring on `main` stops.
 
 ## Done (recent, relevant)
 
@@ -29,30 +30,40 @@ v1.0, work moves to one-PR-per-issue; no more direct authoring on `main`.
       pytest): 0.1 builds the skeleton in a non-crashing order, 0.2 IS writing
       `pyproject.toml` (9 tomllib asserts), 0.3b runs both real install failure
       modes, 0.5 pins `.gitignore` by assert. Numbering still 0.1–0.5 per SPEC.
+      Recorded as **DEC-0009**.
 - [x] **README.md + HOW-TO-USE.md rewritten** — where files come from (`release`
       branch), one course folder, per-part `curl` as you reach each part.
-- [x] **DEC-0009** written + `wiki/build_index.py` rerun (self-test OK); ANCHOR
-      Locked Decisions gained the one-line pointer.
+- [x] **RUL-0004** — agents commit and branch locally; pushing is always manual.
+      Pinned in CLAUDE.md's Session Protocol so it survives compaction.
+- [x] **DEC-0010** — production flow: GitHub Issues tracks problems, a draft PR
+      per ticket tracks the change, `release` is rebuilt from `main` and never
+      merged into, baselines pin both branches with paired tags.
+- [x] **VERSIONS.md** (baseline ledger) + **tools/build-release.sh** (repeatable
+      `release` rebuild; idempotent, never touches the working tree).
 
 ## In Progress
 
-- [ ] `release` branch: created locally as an orphan, content verified. **Not
-      pushed, and never will be by an agent** — RUL-0004: commits are an agent's
-      job, pushing is the human's. Waiting on `git push -u origin release`.
+- [ ] `release` branch: orphan, content verified, **not pushed** (RUL-0004).
+      Identical to `main`'s published files as of 8abbacb — `build-release.sh`
+      confirms no rebuild is due.
 
 ## Next
 
-- [ ] **Joe:** hands-on review, then push both branches and declare v1.0 —
-      exact tag + push commands are in VERSIONS.md ("Declaring a baseline").
-- [ ] Confirm the raw URLs in README/HOW-TO-USE resolve once `release` is on
-      origin; they 404 until then, **and only work at all if the repo is
-      public** (never verified — the visibility check was declined).
-- [ ] First PR under DEC-0010 will be the parts 1–7 "this repo" sweep below.
+- [ ] **Joe:** hands-on review → push both branches → declare v1.0. Exact tag
+      and push commands are in VERSIONS.md ("Declaring a baseline"); set the
+      ledger row's Status to `released` afterwards.
+- [ ] **Unverified, and it gates the download instructions:** is the repo
+      public? `raw.githubusercontent.com` serves public repos only, so the
+      `curl` commands in README/HOW-TO-USE work for a student only if it is.
+      (The visibility check was declined mid-session; never re-run.)
+- [ ] First ticket under DEC-0010: the parts 1–7 "this repo" sweep below.
+      File the issue first — no branch until the ticket exists.
 
 ## Open Questions
 
-- [ ] Parts 1–7 still say "this repo" in places written under the old framing.
-      Not audited this session — worth a sweep before the next release refresh.
+- [ ] Parts 1–7 still say "this repo" in places written under the pre-DEC-0009
+      framing, where the repo *was* the student's project. Not audited this
+      session. Should be a tracked ticket, fixed before the next release refresh.
 
 ## Blockers
 
@@ -63,15 +74,17 @@ v1.0, work moves to one-PR-per-issue; no more direct authoring on `main`.
 - `python-crash-course/part-0.md` — full rewrite (build-it-yourself)
 - `python-crash-course/README.md` · `HOW-TO-USE.md` — download + one-folder model
 - `python-crash-course/PROGRESS.md` — part-0 re-verification entry
-- `wiki/DEC-0009.md` (new) · `wiki/INDEX.md` (regenerated) · `ANCHOR.md`
-- `STATE.md` — this handoff
+- `VERSIONS.md` (new) · `tools/build-release.sh` (new)
+- `wiki/DEC-0009.md` · `wiki/RUL-0004.md` · `wiki/DEC-0010.md` (new) · `wiki/INDEX.md`
+- `CLAUDE.md` (Git rule) · `ANCHOR.md` (2 locked lines) · `STATE.md`
 
 ## Run / test commands
 
 ```bash
 python3 wiki/build_index.py && python3 wiki/build_index.py --test
 cd python-crash-course && python3 tools/lint_workbook.py part-0.md   # …part-7.md
-cd python-crash-course && .venv/bin/pytest /tmp/verify_part0.py -q   # throwaway; recreate per gate
+cd python-crash-course && .venv/bin/pytest /tmp/verify_partN.py -q   # throwaway; recreate per gate
 cd python-crash-course && uvx ruff check . && uvx mypy src
-git log --oneline release -1   # release branch: orphan, student-facing files only
+tools/build-release.sh            # rebuild `release` from main; no-op when unchanged
+git rev-parse baseline/v1.0       # resolve a baseline tag once declared
 ```
