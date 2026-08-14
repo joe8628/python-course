@@ -1,3 +1,8 @@
 __pycache__/
 *.pyc
 .venv/
+
+# Issue and PR bodies staged for `gh ... --body-file`, kept in the repo so they
+# can be reviewed before filing and re-read afterward. Local working material,
+# not history — GitHub holds the filed copy.
+drafts/
