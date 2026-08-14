@@ -26,6 +26,10 @@ BASE=https://raw.githubusercontent.com/joe8628/python-course/release
 curl -O $BASE/part-0.md          # start here; fetch part-1.md when Part 0 is done
 ```
 
+That flag is `-O` — a capital letter **O**, not a zero. It is what saves the
+response to a file named after the URL; without it `curl` prints the whole part
+to your terminal and writes nothing. Check with `ls part-0.md` before moving on.
+
 Prefer everything up front? `git clone --branch release --single-branch
 https://github.com/joe8628/python-course.git ~/projects/crash-course` and build
 Part 0 inside that clone. One part at a time is the better default: it keeps you
@@ -110,6 +114,9 @@ Work the parts strictly in sequence, fetching each as you reach it:
 ```bash
 curl -O $BASE/part-3.md          # same BASE as Step 2; substitute the part you've reached
 ```
+
+Same capital `-O`, same `ls` check — a silent no-op here looks identical to a
+part that simply has nothing in it.
 
 Skills compound: later exercises silently rely on earlier idioms
 (comprehensions, dataclasses, type hints) without re-teaching them. If a
