@@ -33,7 +33,7 @@ Read this index first; then open only the single record you need.
 | [DEC-0007](DEC-0007.md) | Lint gate calibrated against the part-1.md exemplar | Accepted | workbook, quality, tooling | 2026-07-01 | Exemplar is ground truth — refactor/predict exercises exempt from `...`/assert checks; `...` scaffolds may fail to parse. |
 | [DEC-0008](DEC-0008.md) | Repo carries a smoke test so the pytest gate is meaningful | Accepted | tooling, quality, workbook | 2026-07-02 | tests/test_smoke.py keeps bare `pytest` exit 0 — an empty suite exits 5, breaking Part 0's verify-its and the pre-commit pytest hook. |
 | [DEC-0009](DEC-0009.md) | Part 0 is build-it-yourself; released parts download into that same folder | Accepted | workbook, format, distribution, quality | 2026-08-14 | The student builds the course folder in Part 0 (pyproject.toml is the exercise), then downloads each part file into it from a `release` branch carrying only verified content. |
-| [DEC-0010](DEC-0010.md) | Branching, pull-request, and baseline-versioning strategy | Accepted | workflow, git, distribution, quality | 2026-08-14 | main integrates via one draft-PR-per-issue opened before the fix; release is rebuilt from main after each merge; a baseline pins both branches with paired tags recorded in VERSIONS.md. |
+| [DEC-0010](DEC-0010.md) | Branching, pull-request, and baseline-versioning strategy | Accepted | workflow, git, distribution, quality | 2026-08-14 | production model — GitHub Issues tracks the problem, a draft PR per ticket tracks the change; release is rebuilt from main after each merge; a baseline pins both branches with paired tags recorded in VERSIONS.md. |
 
 ## Rejected Ideas — do not re-propose
 
