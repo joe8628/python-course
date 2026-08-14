@@ -14,10 +14,10 @@
 > The ONE thing in flight right now. One or two sentences. This is the line the
 > compaction directives are told to preserve verbatim.
 
-Part 0 has been rewritten to build-it-yourself per DEC-0009 (it was shipping its
-own answers), and the `release` branch now carries only verified, student-facing
-files. Nothing is pushed — `release` exists locally and needs review before it
-goes to origin.
+Content is built and now awaits **hands-on review by Joe** — that review is what
+declares the **v1.0 baseline** (VERSIONS.md, DEC-0010). Nothing is pushed:
+`main` is ahead by several commits and `release` exists only locally. After
+v1.0, work moves to one-PR-per-issue; no more direct authoring on `main`.
 
 ## Done (recent, relevant)
 
@@ -42,10 +42,12 @@ goes to origin.
 
 ## Next
 
-- [ ] Review + push `release`; confirm the raw URLs in README/HOW-TO-USE resolve
-      once it is on origin (they 404 until then).
-- [ ] Decide whether refreshing `release` from `main` gets a script in `tools/`
-      (DEC-0009 flags it as manual for now).
+- [ ] **Joe:** hands-on review, then push both branches and declare v1.0 —
+      exact tag + push commands are in VERSIONS.md ("Declaring a baseline").
+- [ ] Confirm the raw URLs in README/HOW-TO-USE resolve once `release` is on
+      origin; they 404 until then, **and only work at all if the repo is
+      public** (never verified — the visibility check was declined).
+- [ ] First PR under DEC-0010 will be the parts 1–7 "this repo" sweep below.
 
 ## Open Questions
 
