@@ -61,6 +61,21 @@ Locked Decisions list.
 `git push`, no `gh pr/release create`, no remote writes by any route. Leave the
 work local and hand over the exact command. Pushing is always manual (RUL-0004).
 
+**Because you don't run the remote commands, you don't know their outcome:**
+
+- **Re-read before you assert (RUL-0005).** Issue, PR, branch, and merge state
+  are changed by the human between your turns. Re-run `gh issue view` /
+  `gh pr view` / `git fetch` in the *same turn* you state the result. Never
+  restate a value read earlier, never carry a status table forward, and never
+  treat a handed-off command as done because you handed it off.
+- **Hand over one gated step at a time (RUL-0006).** Print only what can run
+  now; stop at the first step whose outcome you have not verified. An "after X"
+  heading is not a gate — a contiguous block gets pasted whole. Say what success
+  looks like when a command can no-op silently.
+- **Surprising output → check the process first.** When something looks wrong,
+  establish which workflow step is incomplete before explaining why a tool's
+  output is technically correct.
+
 ---
 
 ## Drift Self-Check (before implementing anything)
@@ -70,6 +85,9 @@ work local and hand over the exact command. Pushing is always manual (RUL-0004).
 - Violates a binding `RUL-XXXX` rule? → **stop and flag.**
 - Violates a **Workbook Style Rule** (section below)? → **stop and flag.**
 - Expands scope beyond SPEC.md? → **stop and ask.**
+- About to state remote/PR/branch status you read in an *earlier* turn, or to
+  print commands that run past a step you haven't verified? → **stop and
+  re-check** (RUL-0005 / RUL-0006).
 - About to create, edit, or follow a `CLAUDE.md` anywhere other than the repo
   root? → **stop.** This root file is the ONLY operating contract; nested
   `CLAUDE.md` files (e.g. `python-crash-course/CLAUDE.md`) were deliberately
