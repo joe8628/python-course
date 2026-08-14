@@ -43,19 +43,19 @@ authoring on `main` stops.
 
 ## In Progress
 
-- [ ] `release` branch: orphan, content verified, **not pushed** (RUL-0004).
-      Identical to `main`'s published files as of 8abbacb — `build-release.sh`
-      confirms no rebuild is due.
+- [ ] `release` branch: **not pushed** (RUL-0004) — that is the only thing
+      outstanding on it. Content is current (byte-identical to `main`'s
+      published files; `build-release.sh` reports no rebuild due).
+      It is an **orphan by design**: no parent commit, no shared history with
+      `main`, so the anti-drift system is absent from its history and not just
+      its worktree (DEC-0009). Disjoint histories are expected — `release` moves
+      only via `tools/build-release.sh`, never by merge.
 
 ## Next
 
 - [ ] **Joe:** hands-on review → push both branches → declare v1.0. Exact tag
       and push commands are in VERSIONS.md ("Declaring a baseline"); set the
       ledger row's Status to `released` afterwards.
-- [ ] **Unverified, and it gates the download instructions:** is the repo
-      public? `raw.githubusercontent.com` serves public repos only, so the
-      `curl` commands in README/HOW-TO-USE work for a student only if it is.
-      (The visibility check was declined mid-session; never re-run.)
 - [ ] First ticket under DEC-0010: the parts 1–7 "this repo" sweep below.
       File the issue first — no branch until the ticket exists.
 
