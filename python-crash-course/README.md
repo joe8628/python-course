@@ -23,13 +23,18 @@ part file you download lands in it, next to the code you write:
 
 ```bash
 mkdir -p ~/projects/crash-course && cd ~/projects/crash-course
-BASE=https://raw.githubusercontent.com/joe8628/python-course/release
-curl -O $BASE/part-0.md          # start here; fetch part-1.md when Part 0 is done
+curl -O https://raw.githubusercontent.com/joe8628/python-course/release/part-0.md
+ls part-0.md
 ```
 
 That flag is `-O` — a capital letter **O**, not a zero. It is what saves the
 response to a file named after the URL; without it `curl` prints the whole part
-to your terminal and writes nothing. Check with `ls part-0.md` before moving on.
+to your terminal and writes nothing. That is why `ls` is the third line: a
+failed download still exits `0`, so seeing the filename is the only proof.
+
+Fetch each later part the same way when you reach it — same URL, same folder,
+part number changed. Nothing carries over between commands, so it works just as
+well weeks from now in a new terminal.
 
 Prefer everything up front? `git clone --branch release --single-branch
 https://github.com/joe8628/python-course.git` and work inside that clone — but
