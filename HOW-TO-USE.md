@@ -22,9 +22,14 @@ out in Part 0:
 
 ```bash
 mkdir -p ~/projects/crash-course && cd ~/projects/crash-course
-BASE=https://raw.githubusercontent.com/joe8628/python-course/release
-curl -O $BASE/part-0.md          # start here; fetch part-1.md when Part 0 is done
+curl -O https://raw.githubusercontent.com/joe8628/python-course/release/part-0.md
+ls part-0.md
 ```
+
+That flag is `-O` — a capital letter **O**, not a zero. It is what saves the
+response to a file named after the URL; without it `curl` prints the whole part
+to your terminal and writes nothing. That is why `ls` is the third line: a
+failed download still exits `0`, so seeing the filename is the only proof.
 
 Prefer everything up front? `git clone --branch release --single-branch
 https://github.com/joe8628/python-course.git ~/projects/crash-course` and build
@@ -108,8 +113,14 @@ Work the parts strictly in sequence, fetching each as you reach it:
 | 7 | part-7.md | Ch 25–28 — Closing the Loop for the Job Hunt |
 
 ```bash
-curl -O $BASE/part-3.md          # same BASE as Step 2; substitute the part you've reached
+cd ~/projects/crash-course
+curl -O https://raw.githubusercontent.com/joe8628/python-course/release/part-3.md
+ls part-3.md
 ```
+
+Substitute the part you've reached. The URL is written out in full so this
+works in a fresh terminal weeks later — there is nothing left over from Step 2
+to depend on. Same capital `-O`, same `ls` check.
 
 Skills compound: later exercises silently rely on earlier idioms
 (comprehensions, dataclasses, type hints) without re-teaching them. If a
