@@ -3,40 +3,45 @@
 A workbook — not a textbook — for the experienced-but-rusty engineer prepping
 for a Python developer role. Every concept is a short, grounded code snippet;
 every exercise is a scaffold whose **asserts are the spec**. You write the body
-until the asserts pass. No worked solutions exist anywhere in this repo.
+until the asserts pass. No worked solutions exist anywhere in this course.
 
 ## Prerequisites
 
 - You have shipped software before, in some language. This course does not
   teach programming; it teaches *modern Python* to someone who can already code.
 - Python **3.11+** installed (`python3 --version`).
-- A terminal and an editor. Nothing else.
+- A terminal, an editor, and `git`. Nothing else.
 
-## Tooling setup
+## Getting the course
 
-This repo doubles as the running example for Part 0: a real, minimal
-`src/`-layout project. Set it up once:
+The parts are published on the **`release` branch**: only files that have passed
+the verification gate, with none of the authoring machinery. You are never one
+`curl` away from an unfinished part or a spec you have no use for.
 
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -e ".[dev]"        # installs ruff, mypy, pytest
-```
-
-Sanity check:
+There is one directory for the whole course — Part 0 has you create it, and every
+part file you download lands in it, next to the code you write:
 
 ```bash
-ruff check .
-mypy src
-pytest                          # collecting nothing yet is fine
+mkdir -p ~/projects/crash-course && cd ~/projects/crash-course
+BASE=https://raw.githubusercontent.com/joe8628/python-course/release
+curl -O $BASE/part-0.md          # start here; fetch part-1.md when Part 0 is done
 ```
+
+Prefer everything up front? `git clone --branch release --single-branch
+https://github.com/joe8628/python-course.git` and work inside that clone — but
+one part at a time is the better default: it keeps you from skimming ahead, and
+the release branch is where corrections land, so a part fetched later is fresher.
+
+By the end you have a single folder holding your package, its tests, your scratch
+file, and the parts you've worked. There is nothing to install before Part 0 —
+building it *is* Part 0.
 
 ## The working method (assert-driven)
 
 1. Read a concept snippet. The `#` comments state the gotcha or real
    behavior — they are the point, not decoration.
 2. Copy the exercise scaffold (with its asserts) into a scratch file, e.g.
-   `scratch.py`.
+   `scratch.py`, in your project.
 3. Replace the `...` with your implementation. The hint names a technique,
    never the answer.
 4. Run `python scratch.py`. Silence means every assert passed — move on.
@@ -58,6 +63,4 @@ Skills compound: later parts assume the idioms of earlier ones.
 | VI | [part-6.md](part-6.md) | Chapters 21–24 — Applied Python for the Role |
 | VII | [part-7.md](part-7.md) | Chapters 25–28 — Closing the Loop for the Job Hunt |
 
-The authoritative chapter map and content spec live in [SPEC.md](SPEC.md).
-Build state lives in [PROGRESS.md](PROGRESS.md).
 A step-by-step guide to working the course lives in [HOW-TO-USE.md](HOW-TO-USE.md).

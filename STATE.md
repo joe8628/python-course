@@ -4,8 +4,8 @@
 > This is your fast recovery point after `/clear` or compaction. Keep it current
 > over comprehensive — stale state is worse than none.
 
-**Last updated:** 2026-07-06
-**Active branch / worktree:** main
+**Last updated:** 2026-08-14
+**Active branch / worktree:** main (+ new orphan branch `release`, local only)
 
 ---
 
@@ -14,36 +14,42 @@
 > The ONE thing in flight right now. One or two sentences. This is the line the
 > compaction directives are told to preserve verbatim.
 
-ALL parts (0–7, chapters 0–28) are authored, verified, and linted, and the
-final integrity sweep is DONE — the workbook meets SPEC's Definition of Done.
-Only remaining action: commit the uncommitted work (part-7, PROGRESS, sweep fixes).
+Part 0 has been rewritten to build-it-yourself per DEC-0009 (it was shipping its
+own answers), and the `release` branch now carries only verified, student-facing
+files. Nothing is pushed — `release` exists locally and needs review before it
+goes to origin.
 
 ## Done (recent, relevant)
 
-- [x] Final integrity sweep (2026-07-06): lint clean on all 8 parts; part-1.md
-      byte-identical to the e3172db exemplar (git-verified); zero solution
-      leaks; numbering 0.1–0.5 + ch 1–28 gap/dupe-free and matches SPEC's map;
-      all 98 cross-references valid and backward-only (5 prose previews aside);
-      README links all 8 parts; ruff/mypy/tomllib/pytest all green.
-- [x] Doc fix from the sweep: SPEC.md + ANCHOR.md said "9 part files" —
-      corrected to 8 (part-0…part-7), matching the authoritative FILE → CHAPTER
-      MAP. No pedagogy changed; no part file edited.
-- [x] Parts 6 and 7 authored + verified in prior sessions (see PROGRESS.md
-      entries dated 2026-07-06); parts 0–5 committed through `dfc3159`.
+- [x] **Review finding (2026-08-14):** chapter 0 broke RUL-0001. `part-0.md`
+      quoted this repo's complete `pyproject.toml` and `.gitignore` verbatim and
+      every exercise was *verify this repo*, so the one competency Part 0 names —
+      stand up a project — was never exercised. Parts 1–7 unaffected.
+- [x] **part-0.md rewritten** (gate green: lint OK, `verify_part0.py` 3/3 under
+      pytest): 0.1 builds the skeleton in a non-crashing order, 0.2 IS writing
+      `pyproject.toml` (9 tomllib asserts), 0.3b runs both real install failure
+      modes, 0.5 pins `.gitignore` by assert. Numbering still 0.1–0.5 per SPEC.
+- [x] **README.md + HOW-TO-USE.md rewritten** — where files come from (`release`
+      branch), one course folder, per-part `curl` as you reach each part.
+- [x] **DEC-0009** written + `wiki/build_index.py` rerun (self-test OK); ANCHOR
+      Locked Decisions gained the one-line pointer.
 
 ## In Progress
 
-- [ ] none — every PROGRESS.md line is `linted`; final-sweep is `done`.
+- [ ] `release` branch: created locally as an orphan, content verified. **Not
+      pushed.** Needs a human look before `git push -u origin release`.
 
 ## Next
 
-- [ ] Commit: `python-crash-course/part-7.md` (new content), `PROGRESS.md`
-      (part-7 + final-sweep entries), `SPEC.md` + `ANCHOR.md` (9→8 fix),
-      `STATE.md`. Then the project is complete per SPEC's Definition of Done.
+- [ ] Review + push `release`; confirm the raw URLs in README/HOW-TO-USE resolve
+      once it is on origin (they 404 until then).
+- [ ] Decide whether refreshing `release` from `main` gets a script in `tools/`
+      (DEC-0009 flags it as manual for now).
 
 ## Open Questions
 
-- [ ] none
+- [ ] Parts 1–7 still say "this repo" in places written under the old framing.
+      Not audited this session — worth a sweep before the next release refresh.
 
 ## Blockers
 
@@ -51,17 +57,18 @@ Only remaining action: commit the uncommitted work (part-7, PROGRESS, sweep fixe
 
 ## Files touched this session
 
-- `python-crash-course/SPEC.md` — Definition of Done: "9 part files" → 8
-- `ANCHOR.md` — North Star: "9 part files" → 8
-- `python-crash-course/PROGRESS.md` — final-sweep: pending → done (with audit log)
+- `python-crash-course/part-0.md` — full rewrite (build-it-yourself)
+- `python-crash-course/README.md` · `HOW-TO-USE.md` — download + one-folder model
+- `python-crash-course/PROGRESS.md` — part-0 re-verification entry
+- `wiki/DEC-0009.md` (new) · `wiki/INDEX.md` (regenerated) · `ANCHOR.md`
 - `STATE.md` — this handoff
 
 ## Run / test commands
 
 ```bash
 python3 wiki/build_index.py && python3 wiki/build_index.py --test
-bash .claude/hooks/session-start.sh
-cd python-crash-course && python3 tools/lint_workbook.py part-0.md part-1.md part-2.md part-3.md part-4.md part-5.md part-6.md part-7.md
-cd python-crash-course && .venv/bin/pytest -q          # local venv: pytest+fastapi+httpx (no ruff/mypy)
-cd python-crash-course && uvx ruff check . && uvx mypy src   # root .venv is gone; uvx works
+cd python-crash-course && python3 tools/lint_workbook.py part-0.md   # …part-7.md
+cd python-crash-course && .venv/bin/pytest /tmp/verify_part0.py -q   # throwaway; recreate per gate
+cd python-crash-course && uvx ruff check . && uvx mypy src
+git log --oneline release -1   # release branch: orphan, student-facing files only
 ```

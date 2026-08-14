@@ -14,6 +14,21 @@ part-0: linted    # 2026-07-02; verify green (2/2: exercises 0.2/0.5 under pytes
                   # tests/; 0.3 checks `which python3` after deactivate (this distro ships
                   # no bare `python`); 0.4 hook entries cd in from the git root, where
                   # pre-commit actually runs (one level above this dir). Linter unchanged.
+part-0: linted    # 2026-08-14 REWRITE (DEC-0009): chapter 0 was shipping its own answers —
+                  # part-0.md quoted this repo's complete pyproject.toml and .gitignore
+                  # verbatim, and every exercise was "verify this repo" rather than "build a
+                  # project". Now build-it-yourself: 0.1 creates the skeleton in an order that
+                  # cannot crash, 0.2 IS writing pyproject.toml (9 asserts via tomllib), 0.3b
+                  # runs both install failure modes deliberately (missing README = loud build
+                  # failure before dep resolving; missing package dir = install reports success
+                  # and wires up nothing), 0.5 pins .gitignore by assert instead of quoting it.
+                  # Verify green (3/3 under pytest): 0.2 and 0.5 asserts copied byte-exact
+                  # against a constructed reference project, plus 0.1's pre-install
+                  # ModuleNotFoundError checked in a real throwaway venv (with_pip=False) —
+                  # this repo's own venv has crash_course installed, which would have made a
+                  # same-interpreter check vacuously pass. Lint clean; one reword needed
+                  # ("resolution" trips the un-word-bounded solution-leak regex). Linter
+                  # unchanged. README.md + HOW-TO-USE.md rewritten for one-folder download.
 part-2: linted    # 2026-07-02; verify green first run (17/17 under pytest: 14 function-
                   # building references + 5.3/5.4b/6.4 refactor-predict equivalence checks);
                   # all 35 asserts copied byte-exact into the verify file; lint clean with

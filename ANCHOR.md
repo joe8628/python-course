@@ -31,3 +31,4 @@ before it ships.
 - [LOCKED] No part ships without the verification gate (pytest-green asserts + lint) — DEC-0005 / RUL-0002
 - [LOCKED] The workbook is a real src-layout project (hatchling; ruff/mypy/pytest must stay green) — DEC-0006
 - [LOCKED] File→chapter map and PRE-DECIDED CHOICES in `python-crash-course/SPEC.md` are binding; part-1.md is the never-edited style exemplar
+- [LOCKED] Part 0 is build-it-yourself (pyproject.toml IS exercise 0.2); readers download parts into that one folder from the stripped `release` branch — DEC-0009
