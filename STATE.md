@@ -37,7 +37,8 @@ goes to origin.
 ## In Progress
 
 - [ ] `release` branch: created locally as an orphan, content verified. **Not
-      pushed.** Needs a human look before `git push -u origin release`.
+      pushed, and never will be by an agent** — RUL-0004: commits are an agent's
+      job, pushing is the human's. Waiting on `git push -u origin release`.
 
 ## Next
 
