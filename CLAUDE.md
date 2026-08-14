@@ -57,6 +57,10 @@ Do not resume from memory alone.
 files touched / run commands). Promote any now-permanent decision into ANCHOR.md's
 Locked Decisions list.
 
+**Git:** commit freely and create local branches freely; **never push** — no
+`git push`, no `gh pr/release create`, no remote writes by any route. Leave the
+work local and hand over the exact command. Pushing is always manual (RUL-0004).
+
 ---
 
 ## Drift Self-Check (before implementing anything)
