@@ -6,6 +6,17 @@ Record types (by ID prefix, or explicit `type:` frontmatter):
     RUL-XXXX  rule      — binding constraints an agent must not violate
     DEC-XXXX  decision  — choices made; status Rejected = a rejected idea
 
+Two namespaces, both indexed together:
+    wiki/*.md        project records — `RUL-0002`, `DEC-0003`, … (the project
+                     owns this numeric space; upgrades never touch it)
+    wiki/core/*.md   framework records — `RUL-CORE-0001`, `DEC-CORE-0001`, …
+                     (shipped by the framework, replaced wholesale on upgrade)
+
+`origin:` frontmatter is `framework` for the latter and defaults to `project`
+when absent — so records written before the namespace existed stay valid with
+no migration. A `-CORE-` ID still types from its first three characters, so no
+record needs an explicit `type:` to land in the right section.
+
 Run after adding or changing any record:
     python3 wiki/build_index.py
 Run the built-in regression tests:
@@ -22,6 +33,7 @@ import re
 import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
+CORE_DIR = "core"
 PREFIX_TYPE = {"CON": "concept", "RUL": "rule", "DEC": "decision"}
 
 
@@ -56,6 +68,16 @@ def record_type(meta: dict) -> str:
     return PREFIX_TYPE.get(meta.get("id", "")[:3].upper(), "")
 
 
+def record_origin(meta: dict) -> str:
+    """`framework` only when declared; everything else is a project record."""
+    return "framework" if meta.get("origin", "").lower() == "framework" else "project"
+
+
+def sort_key(r: dict) -> tuple:
+    """Project records first, then framework ones; alphabetical within each."""
+    return (r["origin"] == "framework", r["id"])
+
+
 def group(rows: list) -> dict:
     """Split records into the four index sections."""
     g = {"concept": [], "rule": [], "decision": [], "rejected": []}
@@ -65,6 +87,39 @@ def group(rows: list) -> dict:
         elif r["type"] in g:
             g[r["type"]].append(r)
     return g
+
+
+def collect() -> list:
+    """Read every record in wiki/ and wiki/core/ into index rows."""
+    paths = sorted(glob.glob(os.path.join(HERE, "*.md"))) + sorted(
+        glob.glob(os.path.join(HERE, CORE_DIR, "*.md"))
+    )
+    rows = []
+    for path in paths:
+        name = os.path.basename(path)
+        if name == "INDEX.md" or name.startswith("_"):
+            continue
+        with open(path, encoding="utf-8") as f:
+            meta = parse_frontmatter(f.read())
+        if not meta.get("id"):
+            continue
+        # Link relative to wiki/, so core records resolve as core/<file>.md.
+        rel = os.path.relpath(path, HERE).replace(os.sep, "/")
+        rows.append(
+            {
+                "id": meta.get("id", ""),
+                "type": record_type(meta),
+                "origin": record_origin(meta),
+                "title": meta.get("title", ""),
+                "status": meta.get("status", ""),
+                "tags": meta.get("tags", "").strip("[]"),
+                "date": meta.get("date", ""),
+                "summary": meta.get("summary", ""),
+                "file": rel,
+            }
+        )
+    rows.sort(key=sort_key)
+    return rows
 
 
 def _selftest() -> None:
@@ -87,44 +142,44 @@ def _selftest() -> None:
     assert record_type({"id": "CON-0001"}) == "concept"
     assert record_type({"id": "RUL-0002", "type": "rule"}) == "rule"
     assert record_type({"id": "XYZ-0001"}) == ""
-    # A Rejected decision lands in the Rejected Ideas section.
+    # A -CORE- ID types from its prefix exactly like a project ID.
+    assert record_type({"id": "RUL-CORE-0001"}) == "rule"
+    assert record_type({"id": "DEC-CORE-0001"}) == "decision"
+    # Origin defaults to project, so pre-namespace records need no migration.
+    assert record_origin({}) == "project"
+    assert record_origin({"origin": "framework"}) == "framework"
+    assert record_origin({"origin": "Framework"}) == "framework"
+    assert record_origin({"origin": "project"}) == "project"
+    # Project records sort ahead of framework ones within a section.
+    unsorted = [
+        {"id": "RUL-CORE-0001", "origin": "framework"},
+        {"id": "RUL-0002", "origin": "project"},
+        {"id": "RUL-0001", "origin": "project"},
+    ]
+    assert [r["id"] for r in sorted(unsorted, key=sort_key)] == [
+        "RUL-0001",
+        "RUL-0002",
+        "RUL-CORE-0001",
+    ]
+    # A Rejected decision lands in the Rejected Ideas section, core or not.
     rows = [
         {"id": "DEC-0001", "type": "decision", "status": "Accepted"},
         {"id": "DEC-0002", "type": "decision", "status": "Rejected"},
+        {"id": "DEC-CORE-0001", "type": "decision", "status": "Rejected"},
         {"id": "CON-0001", "type": "concept", "status": ""},
         {"id": "RUL-0001", "type": "rule", "status": ""},
     ]
     g = group(rows)
-    assert [r["id"] for r in g["rejected"]] == ["DEC-0002"]
+    assert [r["id"] for r in g["rejected"]] == ["DEC-0002", "DEC-CORE-0001"]
     assert [r["id"] for r in g["decision"]] == ["DEC-0001"]
     assert len(g["concept"]) == len(g["rule"]) == 1
     print("self-test OK")
 
 
 def main() -> None:
-    rows = []
-    for path in sorted(glob.glob(os.path.join(HERE, "*.md"))):
-        name = os.path.basename(path)
-        if name == "INDEX.md" or name.startswith("_"):
-            continue
-        with open(path, encoding="utf-8") as f:
-            meta = parse_frontmatter(f.read())
-        if not meta.get("id"):
-            continue
-        rows.append(
-            {
-                "id": meta.get("id", ""),
-                "type": record_type(meta),
-                "title": meta.get("title", ""),
-                "status": meta.get("status", ""),
-                "tags": meta.get("tags", "").strip("[]"),
-                "date": meta.get("date", ""),
-                "summary": meta.get("summary", ""),
-                "file": name,
-            }
-        )
-    rows.sort(key=lambda r: r["id"])
+    rows = collect()
     g = group(rows)
+    core_count = sum(1 for r in rows if r["origin"] == "framework")
 
     def table(records, with_status=False):
         if not records:
@@ -149,10 +204,15 @@ def main() -> None:
         "> AUTO-GENERATED by `build_index.py` — do not edit by hand.",
         f"> Last generated: {datetime.date.today().isoformat()}  ·  "
         f"{len(g['concept'])} concepts · {len(g['rule'])} rules · "
-        f"{len(g['decision'])} decisions · {len(g['rejected'])} rejected ideas.",
+        f"{len(g['decision'])} decisions · {len(g['rejected'])} rejected ideas "
+        f"({core_count} shipped by the framework).",
         "",
         "Read this index first; then open only the single record you need.",
         "**Check Rejected Ideas before proposing any approach.**",
+        "",
+        "IDs containing `-CORE-` live in `wiki/core/` and are shipped by the",
+        "framework: they are replaced wholesale on upgrade, so do not edit them",
+        "and do not allocate new `-CORE-` IDs. Everything else is yours.",
         "",
         "## Concepts",
         "",
@@ -174,7 +234,7 @@ def main() -> None:
     print(
         f"Wrote {out} ({len(rows)} records: {len(g['concept'])} concepts, "
         f"{len(g['rule'])} rules, {len(g['decision'])} decisions, "
-        f"{len(g['rejected'])} rejected)"
+        f"{len(g['rejected'])} rejected; {core_count} framework)"
     )
 
 

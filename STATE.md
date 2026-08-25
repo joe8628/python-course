@@ -4,10 +4,27 @@
 > This is your fast recovery point after `/clear` or compaction. Keep it current
 > over comprehensive — stale state is worse than none.
 
-**Last updated:** 2026-08-14
-**Active branch / worktree:** main (+ orphan branch `release`, local only)
+**Last updated:** 2026-08-16
+**Branches:** `main` (integration) · `release` (orphan distribution, DEC-0009)
+— positions and sync: `git status -sb`, `git log origin/<branch>..<branch>`
 
 ---
+
+<!-- ADF:BEGIN state-header v2.0.0 -->
+> **Do not record perishable facts here.** Branch sync, PR/issue status, and test
+> results are derivable and go stale silently — this file is injected into every
+> session by the SessionStart hook, so a stale line is asserted as truth. Record
+> *intent and decisions*; name the command that yields live state
+> (RUL-CORE-0002). Identifiers are fine — a branch *name* is durable, its
+> *position* is not.
+>
+> | Instead of | Write |
+> |---|---|
+> | "main is 7 commits ahead of origin" | sync: `git status -sb` |
+> | "the branch is not pushed" | sync: `git log origin/<branch>..<branch>` |
+> | "PR #12 is awaiting review" | PR #12 — status: `gh pr view 12` |
+> | "tests are green" | gate: `<test command>` |
+<!-- ADF:END state-header -->
 
 ## Current Focus
 
@@ -15,10 +32,9 @@
 > compaction directives are told to preserve verbatim.
 
 Content is built and awaits **hands-on review by Joe** — that review declares the
-**v1.0 baseline** (VERSIONS.md). Nothing is pushed: `main` is 7 commits ahead of
-origin and `release` exists only locally. After v1.0, all work runs the
-production flow in DEC-0010 (GitHub Issue → draft PR → merge), and direct
-authoring on `main` stops.
+**v1.0 baseline** (VERSIONS.md; baseline status: `git tag`). All work now runs the
+production flow in DEC-0010 (GitHub Issue → draft PR → merge); direct authoring
+on `main` has stopped.
 
 ## Done (recent, relevant)
 
@@ -43,21 +59,31 @@ authoring on `main` stops.
 
 ## In Progress
 
-- [ ] `release` branch: **not pushed** (RUL-0004) — that is the only thing
-      outstanding on it. Content is current (byte-identical to `main`'s
-      published files; `build-release.sh` reports no rebuild due).
-      It is an **orphan by design**: no parent commit, no shared history with
-      `main`, so the anti-drift system is absent from its history and not just
-      its worktree (DEC-0009). Disjoint histories are expected — `release` moves
-      only via `tools/build-release.sh`, never by merge.
+- [ ] **Issue #3** — agent handoff rules (RUL-0005/0006 + `drafts/`). Branch
+      `fix/3-handoff-rules`. Status: `gh issue view 3`, `gh pr list --head
+      fix/3-handoff-rules`. Lands before the anti-drift upgrade below.
+- [ ] **Anti-drift framework upgrade to v2.0.0.** Branch
+      `chore/adf-upgrade-2.0.0`, stacked on `fix/3-handoff-rules`. Adds
+      `wiki/core/` (`RUL-CORE-0001..0003`, `DEC-CORE-0001`),
+      `.claude/core/RULES.md`, `.adf/`. Installed version: `python3
+      .adf/upgrade.py --check`. **Open item:** `RUL-0005`/`RUL-0006` now
+      duplicate `RUL-CORE-0002`/`RUL-CORE-0003` and should be retired, and
+      `GLOSSARY.md` carries two Perishable vocabulary sections (ours + the
+      framework-managed block) — the framework one is authoritative.
+
+> `release` is an **orphan by design**: no parent commit, no shared history with
+> `main`, so the anti-drift system is absent from its history and not just its
+> worktree (DEC-0009). Disjoint histories are expected — it moves only via
+> `tools/build-release.sh`, never by merge. Whether a rebuild is due:
+> `tools/build-release.sh` (it is a no-op when current).
 
 ## Next
 
-- [ ] **Joe:** hands-on review → push both branches → declare v1.0. Exact tag
-      and push commands are in VERSIONS.md ("Declaring a baseline"); set the
-      ledger row's Status to `released` afterwards.
-- [ ] First ticket under DEC-0010: the parts 1–7 "this repo" sweep below.
-      File the issue first — no branch until the ticket exists.
+- [ ] **Joe:** hands-on review → declare v1.0. Tag and push commands are in
+      VERSIONS.md ("Declaring a baseline"); set the ledger row's Status to
+      `released` afterwards. Baseline status: `git tag`.
+- [ ] Ticket for the parts 1–7 "this repo" sweep below. File the issue first —
+      no branch until the ticket exists (DEC-0010).
 
 ## Open Questions
 
@@ -70,6 +96,14 @@ authoring on `main` stops.
 - none
 
 ## Files touched this session
+
+- `wiki/RUL-0005.md` · `wiki/RUL-0006.md` (new) — handoff rules, issue #3
+- `GLOSSARY.md` — Perishable vocabulary; `CLAUDE.md` — live-state block + import
+- `wiki/core/` · `.claude/core/RULES.md` · `.adf/` (new) — framework v2.0.0
+- `STATE.md` — perishable facts replaced with the commands that derive them
+- `drafts/` (gitignored) — issue/PR bodies + `ANTIDRIFT_UPDATE_PROMPT.md`
+
+### Earlier (part-0 / issue #1, merged)
 
 - `python-crash-course/part-0.md` — full rewrite (build-it-yourself)
 - `python-crash-course/README.md` · `HOW-TO-USE.md` — download + one-folder model
@@ -86,5 +120,7 @@ cd python-crash-course && python3 tools/lint_workbook.py part-0.md   # …part-7
 cd python-crash-course && .venv/bin/pytest /tmp/verify_partN.py -q   # throwaway; recreate per gate
 cd python-crash-course && uvx ruff check . && uvx mypy src
 tools/build-release.sh            # rebuild `release` from main; no-op when unchanged
+python3 .adf/upgrade.py --check   # installed framework version + managed-region drift
+bash .adf/detect.sh               # read-only: what scaffold this repo has
 git rev-parse baseline/v1.0       # resolve a baseline tag once declared
 ```

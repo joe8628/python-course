@@ -6,6 +6,7 @@
 > lives in STATE.md (injected by the SessionStart hook).
 
 @ANCHOR.md
+@.claude/core/RULES.md
 
 ---
 
