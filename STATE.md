@@ -49,8 +49,9 @@ on `main` has stopped.
       Recorded as **DEC-0009**.
 - [x] **README.md + HOW-TO-USE.md rewritten** — where files come from (`release`
       branch), one course folder, per-part `curl` as you reach each part.
-- [x] **RUL-0004** — agents commit and branch locally; pushing is always manual.
-      Pinned in CLAUDE.md's Session Protocol so it survives compaction.
+- [x] **RUL-CORE-0001** — agents commit and branch locally; pushing is always
+      manual. Pinned in CLAUDE.md's Session Protocol so it survives compaction.
+      (Was the project's RUL-0004 until the v2.0.0 framework upgrade absorbed it.)
 - [x] **DEC-0010** — production flow: GitHub Issues tracks problems, a draft PR
       per ticket tracks the change, `release` is rebuilt from `main` and never
       merged into, baselines pin both branches with paired tags.
@@ -59,17 +60,20 @@ on `main` has stopped.
 
 ## In Progress
 
-- [ ] **Issue #3** — agent handoff rules (RUL-0005/0006 + `drafts/`). Branch
+- [ ] **Issue #3** — agent handoff rules (the `drafts/` convention plus the
+      live-state rules the framework later absorbed). Branch
       `fix/3-handoff-rules`. Status: `gh issue view 3`, `gh pr list --head
       fix/3-handoff-rules`. Lands before the anti-drift upgrade below.
 - [ ] **Anti-drift framework upgrade to v2.0.0.** Branch
       `chore/adf-upgrade-2.0.0`, stacked on `fix/3-handoff-rules`. Adds
       `wiki/core/` (`RUL-CORE-0001..0003`, `DEC-CORE-0001`),
       `.claude/core/RULES.md`, `.adf/`. Installed version: `python3
-      .adf/upgrade.py --check`. **Open item:** `RUL-0005`/`RUL-0006` now
-      duplicate `RUL-CORE-0002`/`RUL-CORE-0003` and should be retired, and
-      `GLOSSARY.md` carries two Perishable vocabulary sections (ours + the
-      framework-managed block) — the framework one is authoritative.
+      .adf/upgrade.py --check`. **Rule retirement done in this branch:** the
+      project's `RUL-0004`/`0005`/`0006` were deleted as exact duplicates of
+      `RUL-CORE-0001`/`0002`/`0003`, every reference repointed, and the
+      hand-written Perishable vocabulary section dropped in favour of the
+      framework-managed block in `GLOSSARY.md`. The `-CORE-` records are
+      framework-owned: replaced on upgrade, never edited here.
 
 > `release` is an **orphan by design**: no parent commit, no shared history with
 > `main`, so the anti-drift system is absent from its history and not just its
@@ -97,8 +101,11 @@ on `main` has stopped.
 
 ## Files touched this session
 
-- `wiki/RUL-0005.md` · `wiki/RUL-0006.md` (new) — handoff rules, issue #3
-- `GLOSSARY.md` — Perishable vocabulary; `CLAUDE.md` — live-state block + import
+- `wiki/RUL-0004.md` · `RUL-0005.md` · `RUL-0006.md` (deleted) — retired as
+  duplicates of `RUL-CORE-0001`/`0002`/`0003`; refs repointed
+- `GLOSSARY.md` — framework Perishable vocabulary block replaces ours
+- `CLAUDE.md` — live-state block removed (imported); `wiki/DEC-0010.md` ·
+  `tools/build-release.sh` — repointed to RUL-CORE-0001
 - `wiki/core/` · `.claude/core/RULES.md` · `.adf/` (new) — framework v2.0.0
 - `STATE.md` — perishable facts replaced with the commands that derive them
 - `drafts/` (gitignored) — issue/PR bodies + `ANTIDRIFT_UPDATE_PROMPT.md`
@@ -109,7 +116,7 @@ on `main` has stopped.
 - `python-crash-course/README.md` · `HOW-TO-USE.md` — download + one-folder model
 - `python-crash-course/PROGRESS.md` — part-0 re-verification entry
 - `VERSIONS.md` (new) · `tools/build-release.sh` (new)
-- `wiki/DEC-0009.md` · `wiki/RUL-0004.md` · `wiki/DEC-0010.md` (new) · `wiki/INDEX.md`
+- `wiki/DEC-0009.md` · `wiki/DEC-0010.md` (new) · `wiki/INDEX.md`
 - `CLAUDE.md` (Git rule) · `ANCHOR.md` (2 locked lines) · `STATE.md`
 
 ## Run / test commands

@@ -9,7 +9,7 @@
 # onto `release` — so `release` keeps a readable log of published versions while
 # sharing no history with main.
 #
-# Everything below is local.  Pushing is manual, always (RUL-0004).
+# Everything below is local.  Pushing is manual, always (RUL-CORE-0001).
 set -euo pipefail
 
 SRC_REF="${1:-main}"
