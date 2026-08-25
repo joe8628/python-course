@@ -55,17 +55,21 @@ on `main` has stopped.
 - [x] **DEC-0010** — production flow: GitHub Issues tracks problems, a draft PR
       per ticket tracks the change, `release` is rebuilt from `main` and never
       merged into, baselines pin both branches with paired tags.
+- [x] **Agent handoff rules (issue #3, PR #4).** The `drafts/` convention for
+      staging issue/PR bodies, and the live-state discipline: perishable claims
+      need a same-turn read, and the trigger is *vocabulary*, not intent. The
+      rules were written here, then adopted upstream — the branch above retires
+      the project copies in favour of `RUL-CORE-0001..0003`.
 - [x] **VERSIONS.md** (baseline ledger) + **tools/build-release.sh** (repeatable
       `release` rebuild; idempotent, never touches the working tree).
 
 ## In Progress
 
-- [ ] **Issue #3** — agent handoff rules (the `drafts/` convention plus the
-      live-state rules the framework later absorbed). Branch
-      `fix/3-handoff-rules`. Status: `gh issue view 3`, `gh pr list --head
-      fix/3-handoff-rules`. Lands before the anti-drift upgrade below.
 - [ ] **Anti-drift framework upgrade to v2.0.0.** Branch
-      `chore/adf-upgrade-2.0.0`, stacked on `fix/3-handoff-rules`. Adds
+      `chore/adf-upgrade-2.0.0`, rebased onto `main` after #4 squash-merged (the
+      stack's originals are gone; local tag `prerebase/adf-2.0.0` holds the
+      pre-rebase tip). PR body staged at `drafts/pr-DRAFT-adf-upgrade.md`; no
+      issue — scaffold maintenance, not a workbook defect. Adds
       `wiki/core/` (`RUL-CORE-0001..0003`, `DEC-CORE-0001`),
       `.claude/core/RULES.md`, `.adf/`. Installed version: `python3
       .adf/upgrade.py --check`. **Rule retirement done in this branch:** the
@@ -109,6 +113,9 @@ on `main` has stopped.
 - `wiki/core/` · `.claude/core/RULES.md` · `.adf/` (new) — framework v2.0.0
 - `STATE.md` — perishable facts replaced with the commands that derive them
 - `drafts/` (gitignored) — issue/PR bodies + `ANTIDRIFT_UPDATE_PROMPT.md`
+
+> Outstanding on this branch: it has never been pushed and has no PR. Sync:
+> `git status -sb`; PR: `gh pr list --head chore/adf-upgrade-2.0.0`.
 
 ### Earlier (part-0 / issue #1, merged)
 
