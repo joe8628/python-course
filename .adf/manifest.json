@@ -1,0 +1,15 @@
+{
+  "framework_version": "2.0.0",
+  "managed": {
+    ".claude/core/RULES.md": "sha256:b4a46b3b6d104ae9ebaab5d6f2ee437f78a38a23f6d0c27acf3be08014b727af",
+    "GLOSSARY.md#glossary-vocab": "sha256:c7578b29d2093e0b306fd705b55d931a0d090ffa7ca4f3f30a03a1970099811e",
+    "GLOSSARY.md#rows:terms": "sha256:c9db98009a6c5684d3a6a4d886ff64b2a6671ecd2f4ed65d770cd04ca6317793",
+    "STATE.md#state-header": "sha256:c60dd474a647a2d27d12037948a874526df16141ee10e84938e49e83eaf29308",
+    "wiki/build_index.py": "sha256:d82b81d249c8ee9c62d88a4e89c5dd5027238118df9d3fdc22bfb121127a4c0c",
+    "wiki/core/DEC-CORE-0001.md": "sha256:eddefc75bb83c0461aba88599a4988c57cefc8dc12e2a9521c3eb94728f4d4bc",
+    "wiki/core/RUL-CORE-0001.md": "sha256:f7bbee9f64e36985f004f02a307402f10791c6949e361db2995d78fabeea195b",
+    "wiki/core/RUL-CORE-0002.md": "sha256:c53fb59a2cae3b846dccb4ca6c41c67514439c8d2477e015c5c2a08a28a6b807",
+    "wiki/core/RUL-CORE-0003.md": "sha256:bc9153a10cec77f54e11073fe7d41c8d095298a52ef5e01a698030af4095f358"
+  },
+  "upgraded": "2026-08-15"
+}

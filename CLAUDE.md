@@ -6,6 +6,7 @@
 > lives in STATE.md (injected by the SessionStart hook).
 
 @ANCHOR.md
+@.claude/core/RULES.md
 
 ---
 
@@ -59,29 +60,8 @@ Locked Decisions list.
 
 **Git:** commit freely and create local branches freely; **never push** — no
 `git push`, no `gh pr/release create`, no remote writes by any route. Leave the
-work local and hand over the exact command. Pushing is always manual (RUL-0004).
-
-**Because you don't run the remote commands, you don't know their outcome:**
-
-- **Perishable vocabulary triggers a fresh read (RUL-0005).** The trigger is the
-  *word*, not your intent to assert. GLOSSARY.md's **Perishable vocabulary**
-  table lists them: merged/open/draft, pushed/ahead/in sync, done/blocked/
-  outstanding, now/already/still, commit counts — and the inference verbs that
-  impersonate a read (*should be, must have, by now*). Writing one about an
-  issue, PR, branch, tag, or remote ref requires the check to have run in the
-  *same turn*, after the last event that could have changed it. Test: could a
-  command run outside this session make this sentence false?
-- **Never carry a status table forward, and never claim freshness you lack.**
-  "Verified just now" is itself a perishable claim — permitted only with the
-  command output in the same turn. A false freshness claim is worse than a stale
-  value: it removes the reader's cue to check.
-- **Hand over one gated step at a time (RUL-0006).** Print only what can run
-  now; stop at the first step whose outcome you have not verified. An "after X"
-  heading is not a gate — a contiguous block gets pasted whole. Say what success
-  looks like when a command can no-op silently.
-- **Surprising output → check the process first.** When something looks wrong,
-  establish which workflow step is incomplete before explaining why a tool's
-  output is technically correct.
+work local and hand over the exact command. Pushing is always manual
+(RUL-CORE-0001).
 
 ---
 
@@ -94,7 +74,8 @@ work local and hand over the exact command. Pushing is always manual (RUL-0004).
 - Expands scope beyond SPEC.md? → **stop and ask.**
 - About to write a **Perishable vocabulary** term (GLOSSARY.md) without a fresh
   read in this turn, or to print commands that run past a step you haven't
-  verified? → **stop and re-check** (RUL-0005 / RUL-0006).
+  verified? → **stop and re-check** (RUL-CORE-0002 / RUL-CORE-0003; the full
+  gate is in `.claude/core/RULES.md`, imported above).
 - About to create, edit, or follow a `CLAUDE.md` anywhere other than the repo
   root? → **stop.** This root file is the ONLY operating contract; nested
   `CLAUDE.md` files (e.g. `python-crash-course/CLAUDE.md`) were deliberately
